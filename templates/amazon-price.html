@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
+    <link rel="stylesheet" href="../static/style.css"/>
+    <title>Amazon Price List</title>
+</head>
+<body>
+<div class="container">
+    <div style="text-align: center;">
+        <img src="../static/logo.png" alt="logo"/>
+        <a href="{{ url_for('index')}}">
+            Home
+        </a>
+
+    </div>
+    {% if message %}
+    <p class="message">{{ message | safe }}</p>
+    {% endif %}
+    <form action="/amazon-scrape" method="POST">
+        <div class="form-group">
+
+            <input
+                    type="text"
+                    name="url"
+                    placeholder="Input URL here"
+            />
+
+        </div>
+        <input type="submit" value="Get Data" class="btn"/>
+    </form>
+
+
+    {% if table_data %}
+    {% if table_data is mapping  %}
+    <h1>{{table_data["code"]}}</h1>
+    <p>{{table_data["description"]}}</p>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Seller</th>
+            <th>Price</th>
+            <th>Shipped By</th>
+            <th>Delivery</th>
+            <th>Ratings</th>
+            <th>Imports</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in table_data["data"] %}
+            <tr>
+                <td>{{data["seller"]}}</td>
+                <td>{{data["price"]}}</td>
+                <td>{{data["shipped_by"]}}</td>
+                <td>{{data["delivery"]}}</td>
+                <td>{{data["ratings"]}}</td>
+                <td>{{data["import"]}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% endif %}
+</div>
+</body>
+</html>
