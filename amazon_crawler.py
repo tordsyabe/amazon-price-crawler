@@ -33,6 +33,9 @@ class AmazonCrawler:
         self.url = url
         self._data.clear()
 
+    def __del__(self):
+        pass
+
     def price_crawler(self):
 
         driver = webdriver.Chrome('chromedriver')
