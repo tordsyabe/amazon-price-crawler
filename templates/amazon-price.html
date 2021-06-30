@@ -5,44 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
-    <link rel="stylesheet" href="../static/style.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Amazon Price List</title>
 </head>
-<body>
+<body style="font-size: 0.89rem;">
 <div class="container">
-    <div style="text-align: center;">
-        <img src="../static/logo.png" alt="logo"/>
-        <a href="{{ url_for('index')}}">
-            Home
-        </a>
+    <!--    <div style="text-align: center;">-->
+    <!--        <img src="../static/logo.png" alt="logo"/>-->
+    <!--        <a href="{{ url_for('index')}}">-->
+    <!--            Home-->
+    <!--        </a>-->
 
-    </div>
-    {% if message %}
-    <p>{{ message | safe }}</p>
-    {% endif %}
-    <form action="/amazon-scrape" method="POST">
-        <div class="form-group">
+    <!--    </div>-->
+    <form action="/amazon-scrape" method="POST" class="mt-5" id="url_form">
+        <div class="row">
+            <div class="col-10">
+                <div class="form-group">
+                    <label for="url" class="sr-only">URL</label>
+                    <input
+                            class="form-control"
+                            type="text"
+                            name="url"
+                            id="url"
+                            placeholder="Input URL here"
+                    />
 
-            <input
-                    type="text"
-                    name="url"
-                    placeholder="Input URL here"
-            />
 
+                </div>
+            </div>
+            <div class="col-2">
+                <input class="btn btn-primary" type="submit" value="Get Data"/>
+            </div>
         </div>
-        <input type="submit" value="Get Data" class="btn"/>
+
+        {% if message %}
+        <div class="invalid-feedback d-block pl-3">
+            {{ message | safe }}
+        </div>
+        {% endif %}
+
     </form>
 
 
     {% if table_data %}
-    {% if table_data is mapping  %}
+    {% if table_data is mapping %}
     <h1>{{table_data["code"]}}</h1>
     <p>{{table_data["description"]}}</p>
     <p>{{table_data["product_rating"]}}</p>
     <p>{{table_data["webpage"]}}</p>
     <p>{{table_data["currency"]}}</p>
     <p>{{table_data["date"]}}</p>
-    <table border="1">
+    <table class="table table-bordered table-hover" style="font-size: 0.8rem;">
         <thead>
         <tr>
             <th>Seller</th>
@@ -55,19 +69,31 @@
         </thead>
         <tbody>
         {% for data in table_data["data"] %}
-            <tr>
-                <td>{{data["seller"]}}</td>
-                <td>{{data["price"]}}</td>
-                <td>{{data["shipped_by"]}}</td>
-                <td>{{data["delivery"]}}</td>
-                <td>{{data["ratings"]}}</td>
-                <td>{{data["import"]}}</td>
-            </tr>
+        <tr>
+            <td>{{data["seller"]}}</td>
+            <td>{{data["price"]}}</td>
+            <td>{{data["shipped_by"]}}</td>
+            <td>{{data["delivery"]}}</td>
+            <td>{{data["ratings"]}}</td>
+            <td>{{data["import"]}}</td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
     {% endif %}
     {% endif %}
 </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="../static/main.js"></script>
 </body>
 </html>
