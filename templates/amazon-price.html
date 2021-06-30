@@ -18,7 +18,7 @@
 
     </div>
     {% if message %}
-    <p class="message">{{ message | safe }}</p>
+    <p>{{ message | safe }}</p>
     {% endif %}
     <form action="/amazon-scrape" method="POST">
         <div class="form-group">
@@ -38,6 +38,10 @@
     {% if table_data is mapping  %}
     <h1>{{table_data["code"]}}</h1>
     <p>{{table_data["description"]}}</p>
+    <p>{{table_data["product_rating"]}}</p>
+    <p>{{table_data["webpage"]}}</p>
+    <p>{{table_data["currency"]}}</p>
+    <p>{{table_data["date"]}}</p>
     <table border="1">
         <thead>
         <tr>

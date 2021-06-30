@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import datetime
+
 
 def price_crawler(url):
     chrome_options = webdriver.ChromeOptions()
@@ -11,6 +13,7 @@ def price_crawler(url):
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-extensions')
     price_symbol = ""
+    webpage = ""
 
     seller_list = []
     price_list = []
@@ -20,16 +23,23 @@ def price_crawler(url):
     seller_ratings = []
     product_codes = []
 
-    data = []
-
     driver = webdriver.Chrome('chromedriver')
 
     split_url = url.split("/")
 
     if len(split_url) > 1:
-        asin = split_url[5]
+        for item in split_url:
+
+            if "www." in item:
+                webpage = item
+            if "B0" in item:
+                asin = item
+                break
+
     else:
         asin = split_url[0]
+
+    print(asin)
 
     driver.get('https://www.amazon.ae/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1')
 
@@ -50,6 +60,11 @@ def price_crawler(url):
 
     product_description = element.text
 
+    element = WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.ID, 'aod-asin-reviews-count-title'))
+    )
+    product_rating = element.text
+
     try:
         element = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.ID, 'aod-pinned-offer-show-more-link'))
@@ -63,7 +78,7 @@ def price_crawler(url):
     try:
 
         element = WebDriverWait(driver, 5).until(
-            EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@id,'aod-price-')]"))
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "a-price"))
         )
 
         for price in element:
@@ -86,7 +101,8 @@ def price_crawler(url):
 
         for delivery_detail in element:
             details = delivery_detail.text
-            delivery_details.append(details)
+            if details:
+                delivery_details.append(details)
 
         print("delivery details collected")
     except:
@@ -113,9 +129,11 @@ def price_crawler(url):
         for sold_by in element:
             try:
                 seller = sold_by.find_element_by_class_name("a-link-normal").text
-                seller_rating = sold_by.find_element_by_id("aod-offer-seller-rating").text
+                seller_rating = sold_by.find_element_by_id("seller-rating-count-{iter}").text
                 if seller:
                     seller_list.append(seller)
+
+                if seller_rating:
                     seller_ratings.append(seller_rating)
 
             except:
@@ -144,6 +162,13 @@ def price_crawler(url):
     # except:
     #     pass
 
+    print(len(seller_list), len(price_list), len(shippers), len(delivery_details), len(seller_ratings))
+    print(seller_list)
+    print(price_list)
+    print(shippers)
+    print(delivery_details)
+    print(seller_ratings)
+
     data = [{"seller": seller,
              "price": price,
              "shipped_by": shipper,
@@ -153,14 +178,19 @@ def price_crawler(url):
                                                                  price_list,
                                                                  shippers,
                                                                  delivery_details,
+
                                                                  seller_ratings)]
 
+    date_today = datetime.datetime.now()
+    timestamp = date_today.strftime("%Y-%m-%d %H:%M:%S")
     data_list = {
         "code": asin,
         "description": product_description,
+        "product_rating": product_rating,
         "currency": price_symbol,
         "data": data,
-        # "date": datetime.datetime.now()
+        "webpage": webpage,
+        "date": timestamp
     }
 
     return data_list
