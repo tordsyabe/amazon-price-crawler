@@ -94,7 +94,7 @@ def price_crawler(url):
             "data": [],
             "webpage": webpage,
             "date": timestamp,
-            "error": "Product has currently has no sellers."
+            "error": "Product currently has no sellers."
         }
 
     try:
