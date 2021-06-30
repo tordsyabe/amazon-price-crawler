@@ -23,6 +23,8 @@ def amazon_scrape():
         # data = AmazonCrawler(url).price_crawler()
         data = price_crawler(url)
 
+        print(data)
+
         return render_template('amazon-price.html', table_data=data)
 
 

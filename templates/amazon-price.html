@@ -7,17 +7,11 @@
     <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Amazon Price List</title>
+    <title>Amazon Price Comparison</title>
 </head>
 <body style="font-size: 0.89rem;">
 <div class="container">
-    <!--    <div style="text-align: center;">-->
-    <!--        <img src="../static/logo.png" alt="logo"/>-->
-    <!--        <a href="{{ url_for('index')}}">-->
-    <!--            Home-->
-    <!--        </a>-->
-
-    <!--    </div>-->
+    <h1 class="mt-5">Amazon Price Comparator</h1>
     <form action="/amazon-scrape" method="POST" class="mt-5" id="url_form">
         <div class="row">
             <div class="col-10">
@@ -28,7 +22,7 @@
                             type="text"
                             name="url"
                             id="url"
-                            placeholder="Input URL here"
+                            placeholder="Input product URL or ASIN"
                     />
 
 
@@ -46,17 +40,39 @@
         {% endif %}
 
     </form>
+</div>
 
+{% if table_data %}
+{% if table_data is mapping %}
+<div class="bg-light">
+    <div class="container">
+        <div class="row mt-4 py-5">
+            <div class="col-12">
+                <h4>{{table_data["description"]}}</h4>
+            </div>
+            <div class="col-12">
+                <h5 class="text-secondary">{{table_data["code"]}}</h5>
+            </div>
+            <div class="col-3">
+                <h6>Ratings: {{table_data["ratings"]}}</h6>
+            </div>
+            <div class="col-3">
+                <h6>Webpage: {{table_data["webpage"]}}</h6>
+            </div>
+            <div class="col-3">
+                <h6>Currency: {{table_data["currency"]}}</h6>
+            </div>
+            <div class="col-3">
+                <h6>Date: {{table_data["date"]}}</h6>
+            </div>
 
-    {% if table_data %}
-    {% if table_data is mapping %}
-    <h1>{{table_data["code"]}}</h1>
-    <p>{{table_data["description"]}}</p>
-    <p>{{table_data["product_rating"]}}</p>
-    <p>{{table_data["webpage"]}}</p>
-    <p>{{table_data["currency"]}}</p>
-    <p>{{table_data["date"]}}</p>
-    <table class="table table-bordered table-hover" style="font-size: 0.8rem;">
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
+    <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
         <thead>
         <tr>
             <th>Seller</th>
@@ -80,9 +96,16 @@
         {% endfor %}
         </tbody>
     </table>
-    {% endif %}
-    {% endif %}
 </div>
+
+{% endif %}
+{% endif %}
+
+<!--<footer class="bg-light" style="position: absolute; bottom: 0; width: 100%; height: 60px; line-height: 60px;">-->
+<!--    <div class="container">-->
+<!--        <p class="text-muted text-center small">All rights reserved 2021. Developed and maintained by Alrais IT Department</p>-->
+<!--    </div>-->
+<!--</footer>-->
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

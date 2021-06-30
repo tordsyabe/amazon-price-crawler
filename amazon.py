@@ -137,6 +137,7 @@ def price_crawler(url):
                     seller_ratings.append(seller_rating)
 
             except:
+                print("seller or seller rating collection failed")
                 seller_list.append("Amazon.ae")
                 seller_ratings.append("No ratings")
                 continue
@@ -155,9 +156,9 @@ def price_crawler(url):
     #     for int_ship in element:
     #         try:
     #             int_ship.find_element(By.ID, 'aod-import-badge')
-    #             self._imports.append("International Shipping")
+    #             imports.append("International Shipping")
     #         except:
-    #             self._imports.append("Does not import internationally")
+    #             imports.append("Does not import internationally")
     #             continue
     # except:
     #     pass
@@ -178,7 +179,6 @@ def price_crawler(url):
                                                                  price_list,
                                                                  shippers,
                                                                  delivery_details,
-
                                                                  seller_ratings)]
 
     date_today = datetime.datetime.now()
