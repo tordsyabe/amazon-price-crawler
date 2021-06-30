@@ -23,6 +23,9 @@ def price_crawler(url):
     seller_ratings = []
     product_codes = []
 
+    date_today = datetime.datetime.now()
+    timestamp = date_today.strftime("%Y-%m-%d %H:%M:%S")
+
     driver = webdriver.Chrome('chromedriver')
 
     split_url = url.split("/")
@@ -42,42 +45,61 @@ def price_crawler(url):
     print(asin)
 
     driver.get('https://www.amazon.ae/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1')
-
-    element = WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
-    )
-
-    driver.execute_script('arguments[0].scrollTo(0, arguments[0].scrollHeight)', element)
-    print("scrolled down")
-    driver.execute_script('arguments[0].scrollTo(0, 0)', element)
-    print("scrolled up")
-
-    driver.implicitly_wait(5)
-
-    element = WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.ID, 'aod-asin-title-text'))
-    )
-
-    product_description = element.text
-
-    element = WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.ID, 'aod-asin-reviews-count-title'))
-    )
-    product_rating = element.text
-
     try:
-        element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.ID, 'aod-pinned-offer-show-more-link'))
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
         )
-        element.click()
-        print("see more button clicked")
-    except TimeoutException:
-        print("see more button click failed")
+
+        driver.execute_script('arguments[0].scrollTo(0, arguments[0].scrollHeight)', element)
+        print("scrolled down")
+        driver.execute_script('arguments[0].scrollTo(0, 0)', element)
+        print("scrolled up")
+    except:
+        print("failed")
         pass
 
     try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'aod-asin-title-text'))
+        )
 
-        element = WebDriverWait(driver, 5).until(
+        product_description = element.text
+    except:
+        print("Failed to collect product description")
+        pass
+
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'aod-asin-reviews-count-title'))
+        )
+        product_rating = element.text
+    except:
+        print("Failed to collect product raitings")
+        pass
+
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="aod-pinned-offer-show-more-link"]'))
+        )
+        element.click()
+        print("see more button clicked")
+    except:
+        print("see more button click failed")
+        driver.quit()
+        return {
+            "code": asin,
+            "description": product_description,
+            "product_rating": "N/A",
+            "currency": "N/A",
+            "data": [],
+            "webpage": webpage,
+            "date": timestamp,
+            "error": "Product has currently has no sellers."
+        }
+
+    try:
+
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "a-price"))
         )
 
@@ -95,7 +117,7 @@ def price_crawler(url):
         print("prices collection problem")
         pass
     try:
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.ID, "ddmDeliveryMessage"))
         )
 
@@ -109,7 +131,7 @@ def price_crawler(url):
         print("delivery details collection failed")
         pass
     try:
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.ID, "aod-offer-shipsFrom"))
         )
 
@@ -122,7 +144,7 @@ def price_crawler(url):
         print("shipper details collection failed")
         pass
     try:
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.ID, "aod-offer-soldBy"))
         )
 
@@ -181,8 +203,6 @@ def price_crawler(url):
                                                                  delivery_details,
                                                                  seller_ratings)]
 
-    date_today = datetime.datetime.now()
-    timestamp = date_today.strftime("%Y-%m-%d %H:%M:%S")
     data_list = {
         "code": asin,
         "description": product_description,

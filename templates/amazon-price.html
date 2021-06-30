@@ -72,30 +72,34 @@
 </div>
 
 <div class="container">
-    <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
-        <thead>
-        <tr>
-            <th>Seller</th>
-            <th>Price</th>
-            <th>Shipped By</th>
-            <th>Delivery</th>
-            <th>Ratings</th>
-            <th>Imports</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for data in table_data["data"] %}
-        <tr>
-            <td>{{data["seller"]}}</td>
-            <td>{{data["price"]}}</td>
-            <td>{{data["shipped_by"]}}</td>
-            <td>{{data["delivery"]}}</td>
-            <td>{{data["ratings"]}}</td>
-            <td>{{data["import"]}}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% if table_data["error"] %}
+        <h5 class="mt-5">{{ table_data["error"]}}</h5>
+    {% else %}
+        <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
+            <thead>
+            <tr>
+                <th>Seller</th>
+                <th>Price</th>
+                <th>Shipped By</th>
+                <th>Delivery</th>
+                <th>Ratings</th>
+                <th>Imports</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in table_data["data"] %}
+            <tr>
+                <td>{{data["seller"]}}</td>
+                <td>{{data["price"]}}</td>
+                <td>{{data["shipped_by"]}}</td>
+                <td>{{data["delivery"]}}</td>
+                <td>{{data["ratings"]}}</td>
+                <td>{{data["import"]}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 </div>
 
 {% endif %}
