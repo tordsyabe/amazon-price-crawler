@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 
-
-from amazon_crawler import AmazonCrawler
-from amazon import price_crawler
+from amazon import amazon_crawler
+from noon import noon_crawler
 
 app = Flask(__name__)
 
@@ -20,12 +19,18 @@ def amazon_scrape():
         if url == '':
             return render_template('amazon-price.html', message='Please enter required fields')
 
-        # data = AmazonCrawler(url).price_crawler()
-        data = price_crawler(url)
+        split_url = url.split("/")
+        table_data = {}
 
-        print(data)
+        print(split_url)
 
-        return render_template('amazon-price.html', table_data=data)
+        for item in split_url:
+            if "B0" in item:
+                table_data = amazon_crawler(url)
+            elif "N" in item:
+                table_data = noon_crawler(url)
+
+        return render_template('amazon-price.html', table_data=table_data)
 
 
 if __name__ == '__main__':

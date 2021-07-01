@@ -7,13 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 import datetime
 
 
-def price_crawler(url):
+def amazon_crawler(url):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-extensions')
     price_symbol = ""
     webpage = ""
+    data = []
 
     seller_list = []
     price_list = []
