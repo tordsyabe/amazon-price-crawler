@@ -7,12 +7,31 @@
     <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Amazon Price Comparison</title>
+    <title>Amazon/Noon Price Comparison</title>
 </head>
 <body style="font-size: 0.89rem;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Alrais Trading</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('index') }}">Price Comparison <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('rustoleum_batch_code') }}">Rustoleum Batch Code</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 <div class="container">
-    <h1 class="mt-5">Amazon Price Comparator</h1>
-    <form action="/amazon-scrape" method="POST" class="mt-5" id="url_form">
+
+    <h1 class="mt-5">Price Comparison</h1>
+    <h5 class="text-muted">Amazon and Noon</h5>
+    <form action="/crawler" method="POST" class="mt-5" id="url_form">
         <div class="row">
             <div class="col-10">
                 <div class="form-group">
@@ -73,32 +92,32 @@
 
 <div class="container">
     {% if table_data["error"] %}
-        <h5 class="mt-5">{{ table_data["error"]}}</h5>
+    <h5 class="mt-5">{{ table_data["error"]}}</h5>
     {% else %}
-        <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
-            <thead>
-            <tr>
-                <th>Seller</th>
-                <th>Price</th>
-                <th>Shipped By</th>
-                <th>Delivery</th>
-                <th>Ratings</th>
-                <th>Imports</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for data in table_data["data"] %}
-            <tr>
-                <td>{{data["seller"]}}</td>
-                <td>{{data["price"]}}</td>
-                <td>{{data["shipped_by"]}}</td>
-                <td>{{data["delivery"]}}</td>
-                <td>{{data["ratings"]}}</td>
-                <td>{{data["import"]}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
+        <thead>
+        <tr>
+            <th>Seller</th>
+            <th>Price</th>
+            <th>Shipped By</th>
+            <th>Delivery</th>
+            <th>Ratings</th>
+            <th>Imports</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in table_data["data"] %}
+        <tr>
+            <td>{{data["seller"]}}</td>
+            <td>{{data["price"]}}</td>
+            <td>{{data["shipped_by"]}}</td>
+            <td>{{data["delivery"]}}</td>
+            <td>{{data["ratings"]}}</td>
+            <td>{{data["import"]}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     {% endif %}
 </div>
 

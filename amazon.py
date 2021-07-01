@@ -153,17 +153,29 @@ def amazon_crawler(url):
             try:
                 seller = sold_by.find_element_by_class_name("a-link-normal").text
                 seller_rating = sold_by.find_element_by_id("seller-rating-count-{iter}").text
+
                 if seller:
                     seller_list.append(seller)
 
                 if seller_rating:
                     seller_ratings.append(seller_rating)
 
+                try:
+                    import_badge = sold_by.find_element(By.ID, 'aod-import-badge')
+                    print("Yes")
+                    if seller:
+                        imports.append(import_badge.text)
+                except:
+                    if seller:
+                        imports.append("Does not import internationally")
+                    pass
+
             except:
                 print("seller or seller rating collection failed")
                 seller_list.append("Amazon.ae")
                 seller_ratings.append("No ratings")
-                continue
+                pass
+
         print("seller collected")
 
     except:
@@ -172,37 +184,26 @@ def amazon_crawler(url):
 
     driver.quit()
 
-    # try:
-    #     element = WebDriverWait(driver, 5).until(
-    #         EC.presence_of_all_elements_located((By.ID, "aod-import-badge"))
-    #     )
-    #     for int_ship in element:
-    #         try:
-    #             int_ship.find_element(By.ID, 'aod-import-badge')
-    #             imports.append("International Shipping")
-    #         except:
-    #             imports.append("Does not import internationally")
-    #             continue
-    # except:
-    #     pass
-
-    print(len(seller_list), len(price_list), len(shippers), len(delivery_details), len(seller_ratings))
+    print(len(seller_list), len(price_list), len(shippers), len(delivery_details), len(seller_ratings), len(imports))
     print(seller_list)
     print(price_list)
     print(shippers)
     print(delivery_details)
     print(seller_ratings)
+    print(imports)
 
     data = [{"seller": seller,
              "price": price,
              "shipped_by": shipper,
              "delivery": delivery,
-             "ratings": ratings.replace("\n", " ")}
-            for seller, price, shipper, delivery, ratings in zip(seller_list,
-                                                                 price_list,
-                                                                 shippers,
-                                                                 delivery_details,
-                                                                 seller_ratings)]
+             "ratings": ratings.replace("\n", " "),
+             "import": imports}
+            for seller, price, shipper, delivery, ratings, imports in zip(seller_list,
+                                                                          price_list,
+                                                                          shippers,
+                                                                          delivery_details,
+                                                                          seller_ratings,
+                                                                          imports)]
 
     data_list = {
         "code": asin,
