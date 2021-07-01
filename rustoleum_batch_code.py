@@ -26,8 +26,7 @@ def convert_batch_to_mfg(batch_codes):
                 "batch_code": stripped_bc,
                 "mfg": "Batch code should be not less than 6"
             }
-            converted_batch_code.append(batch)
-            continue
+            return converted_batch_code.append(batch)
             # YEAR
         try:
             if not batch_code[1].isnumeric() or int(batch_code[1]) > len(years) - 1:
@@ -35,8 +34,8 @@ def convert_batch_to_mfg(batch_codes):
                     "batch_code": stripped_bc,
                     "mfg": "There was an error in batch code year"
                 }
-                converted_batch_code.append(batch)
-                continue
+                return converted_batch_code.append(batch)
+
             else:
                 try:
                     year = years[int(batch_code[1])]
@@ -45,15 +44,15 @@ def convert_batch_to_mfg(batch_codes):
                         "batch_code": stripped_bc,
                         "mfg": "There was an error in batch code year"
                     }
-                    converted_batch_code.append(batch)
-                    continue
+                    return converted_batch_code.append(batch)
+
         except IndexError:
             batch = {
                 "batch_code": stripped_bc,
                 "mfg": "Blank batch code"
             }
-            converted_batch_code.append(batch)
-            continue
+            return converted_batch_code.append(batch)
+
 
             # MONTH
         try:
@@ -62,8 +61,8 @@ def convert_batch_to_mfg(batch_codes):
                     "batch_code": stripped_bc,
                     "mfg": "There was an error in batch code month"
                 }
-                converted_batch_code.append(batch)
-                continue
+                return converted_batch_code.append(batch)
+
             else:
                 if batch_code[2] == "O":
                     batch_code[2] = 10
@@ -77,8 +76,7 @@ def convert_batch_to_mfg(batch_codes):
                 "batch_code": stripped_bc,
                 "mfg": "Blank batch code"
             }
-            converted_batch_code.append(batch)
-            continue
+            return converted_batch_code.append(batch)
 
             # DAYS
         try:
@@ -88,16 +86,14 @@ def convert_batch_to_mfg(batch_codes):
                 "batch_code": stripped_bc,
                 "mfg": "There was an error in batch code days"
             }
-            converted_batch_code.append(batch)
-            continue
+            return converted_batch_code.append(batch)
 
         if day_code not in check_days:
             batch = {
                 "batch_code": stripped_bc,
                 "mfg": "There was an error in batch code days"
             }
-            converted_batch_code.append(batch)
-            continue
+            return converted_batch_code.append(batch)
         else:
             day = day_code
 
@@ -114,6 +110,9 @@ def convert_batch_to_mfg(batch_codes):
             converted_batch_code.append(batch)
 
         except:
-            print(index, ",", stripped_bc, ",", "Invalid date provided, day is out of range for month")
-            continue
-    return converted_batch_code
+            batch = {
+                "batch_code": stripped_bc,
+                "mfg": final_date
+            }
+
+            return converted_batch_code.append(batch)
