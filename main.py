@@ -48,10 +48,11 @@ def crawler():
         print(split_url)
 
         for item in split_url:
-            if "B0" in item:
+            if "B" in item and len(item) == 10:
                 table_data = amazon_crawler(url)
                 break
-            elif "N" in item:
+            elif "N" in item and len(item) == 10:
+
                 table_data = noon_crawler(url)
                 break
 
