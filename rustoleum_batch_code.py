@@ -6,9 +6,9 @@ def convert_batch_to_mfg(batch_codes):
 
     years = ["2020", "2021", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
 
-    years_gen = [year for year in range(datetime.datetime.today().year - 1, 2023)]
-
-    print(years_gen)
+    # years_gen = [year for year in range(datetime.datetime.today().year - 1, 2023)]
+    #
+    # print(years_gen)
 
     months = ["0" + str(day) if day < 10 else str(day) for day in range(1, 13)]
 
@@ -107,7 +107,7 @@ def convert_batch_to_mfg(batch_codes):
                 "mfg": final_date
             }
 
-            converted_batch_code.append(batch)
+            return converted_batch_code.append(batch)
 
         except:
             batch = {
