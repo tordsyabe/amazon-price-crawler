@@ -75,6 +75,7 @@ def amazon_crawler(url):
         )
         product_rating = element.text
     except:
+        product_rating = "N/A"
         print("Failed to collect product raitings")
         pass
 
