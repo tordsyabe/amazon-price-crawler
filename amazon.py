@@ -104,7 +104,7 @@ def amazon_crawler(url):
             EC.presence_of_all_elements_located((By.CLASS_NAME, "a-price"))
         )
 
-        for price in element:
+        for price in element[1:]:
             price_symbol = price.find_element_by_class_name("a-price-symbol").text
             price_whole = price.find_element_by_class_name("a-price-whole").text
             price_fraction = price.find_element_by_class_name("a-price-fraction").text
@@ -122,7 +122,7 @@ def amazon_crawler(url):
             EC.presence_of_all_elements_located((By.ID, "ddmDeliveryMessage"))
         )
 
-        for delivery_detail in element:
+        for delivery_detail in element[1:]:
             details = delivery_detail.text
             if details:
                 delivery_details.append(details)
@@ -136,7 +136,7 @@ def amazon_crawler(url):
             EC.presence_of_all_elements_located((By.ID, "aod-offer-shipsFrom"))
         )
 
-        for sold_by in element:
+        for sold_by in element[1:]:
             shipper = sold_by.find_element_by_class_name("a-color-base").text
             if shipper:
                 shippers.append(shipper)
@@ -149,10 +149,11 @@ def amazon_crawler(url):
             EC.presence_of_all_elements_located((By.ID, "aod-offer-soldBy"))
         )
 
-        for sold_by in element:
+        for sold_by in element[1:]:
             try:
-                seller = sold_by.find_element_by_class_name('a-link-normal').text
+                seller = sold_by.find_element_by_class_name("a-link-normal").text
                 seller_rating = sold_by.find_element_by_id("seller-rating-count-{iter}").text
+                print(seller)
 
                 if seller:
                     seller_list.append(seller)
