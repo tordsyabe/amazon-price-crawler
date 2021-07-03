@@ -113,7 +113,7 @@ def amazon_crawler(url):
                 price_list.append(f"{price_whole}.{price_fraction}")
                 product_codes.append(asin)
 
-        print("prices colledted")
+        print("prices collected")
     except:
         print("prices collection problem")
         pass
@@ -151,30 +151,30 @@ def amazon_crawler(url):
 
         for sold_by in element:
             try:
-                seller = sold_by.find_element_by_class_name("a-link-normal").text
+                seller = sold_by.find_element_by_class_name('a-link-normal').text
                 seller_rating = sold_by.find_element_by_id("seller-rating-count-{iter}").text
 
                 if seller:
                     seller_list.append(seller)
 
-                if seller_rating:
+                if seller:
                     seller_ratings.append(seller_rating)
 
-                try:
-                    import_badge = sold_by.find_element(By.ID, 'aod-import-badge')
-                    print("Yes")
-                    if seller:
-                        imports.append(import_badge.text)
-                except:
-                    if seller:
-                        imports.append("Does not import internationally")
-                    pass
 
             except:
                 print("seller or seller rating collection failed")
+
                 seller_list.append("Amazon.ae")
                 seller_ratings.append("No ratings")
                 pass
+
+            try:
+                import_badge = sold_by.find_element_by_id('aod-import-badge').text
+                if seller:
+                    imports.append(import_badge)
+            except:
+                if seller:
+                    imports.append("Does not import internationally")
 
         print("seller collected")
 
@@ -205,6 +205,20 @@ def amazon_crawler(url):
                                                                           seller_ratings,
                                                                           imports)]
 
+    it = iter([seller_list, price_list, shippers, delivery_details, seller_ratings, imports])
+    the_len = len(next(it))
+    if not all(len(l) == the_len for l in it):
+        return {
+            "code": asin,
+            "description": product_description,
+            "product_rating": product_rating,
+            "currency": price_symbol,
+            "data": data,
+            "webpage": webpage,
+            "date": timestamp,
+            "error": "There was a problem with the data collected"
+        }
+
     data_list = {
         "code": asin,
         "description": product_description,
@@ -212,7 +226,8 @@ def amazon_crawler(url):
         "currency": price_symbol,
         "data": data,
         "webpage": webpage,
-        "date": timestamp
+        "date": timestamp,
+        "error": ""
     }
 
     return data_list
