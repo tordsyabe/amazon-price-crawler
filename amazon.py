@@ -163,8 +163,8 @@ def amazon_crawler(url):
 
             except:
                 print("seller or seller rating collection failed")
-
-                seller_list.append("Amazon.ae")
+                seller = "Amazon.ae"
+                seller_list.append(seller)
                 seller_ratings.append("No ratings")
                 pass
 
