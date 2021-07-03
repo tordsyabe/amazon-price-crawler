@@ -25,13 +25,13 @@ def compute_batch_code():
         if batch_code == '':
             return render_template('rustoleum-batch-code.html', message='Please enter required fields')
 
-        split_batch_code = batch_code.split(",")
+        split_batch_code = batch_code.split(" ")
         print(split_batch_code)
-        batch_codes = convert_batch_to_mfg(batch_code)
+        batch_codes = convert_batch_to_mfg(split_batch_code)
 
         print(batch_codes)
 
-    return render_template('rustoleum-batch-code.html', batch_codes=[])
+    return render_template('rustoleum-batch-code.html', batch_codes=batch_codes)
 
 
 @app.route('/crawler', methods=['GET', 'POST'])

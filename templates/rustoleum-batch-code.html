@@ -62,6 +62,35 @@
 
     </form>
 </div>
+
+{% if batch_codes %}
+
+<div class="container">
+    {% if batch_codes["error"] %}
+    <h5 class="mt-5">{{ batch_codes["error"]}}</h5>
+    {% else %}
+    <table class="table table-bordered table-hover mt-5" style="font-size: 0.8rem;">
+        <thead>
+        <tr>
+            <th>sq no.</th>
+            <th>Batch Code</th>
+            <th>Manufacturing Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in batch_codes %}
+        <tr>
+            <td>{{data["index"]}}</td>
+            <td>{{data["batch_code"]}}</td>
+            <td>{{data["mfg"]}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endif %}
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
