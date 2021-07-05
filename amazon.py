@@ -172,18 +172,18 @@ def amazon_crawler(url):
                 'a-price-whole').text
             # print("PRICE", price_whole)
 
-            price_fraction = aod_offer.find_element_by_class_name(
+            price_fraction = aod_offer.find_element_by_xpath(
                 'a-price-fraction').text
             # print("PRICE", price_fraction)
             try:
-                delivery = aod_offer.find_element_by_id(
-                    'ddmDeliveryMessage').text
+                delivery = aod_offer.find_element_by_xpath(
+                    'div[@id="ddmDeliveryMessage"]').get_attribute('innerHTML').strip()
                 # print("DELIVERY", delivery)
 
             except:
-                delivery = aod_offer.find_elements_by_class_name(
-                    'aod-ship-charge')
-                print("FAILED DELIVERY", delivery)
+                # delivery = aod_offer.find_element_by_xpath(
+                #     './/*[@id="aod-offer-price"]/div/div/div[2]/div/div/div[1]/div[4]').text
+                print("FAILED DELIVERY")
                 pass
                 # print("DELIVERY", delivery)
 
