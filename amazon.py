@@ -76,7 +76,7 @@ def amazon_crawler(url):
         product_rating = element.text
     except:
         product_rating = "N/A"
-        print("Failed to collect product raitings")
+        print("Failed to collect product ratings")
         pass
 
     try:
@@ -91,7 +91,7 @@ def amazon_crawler(url):
         return {
             "code": asin,
             "description": product_description,
-            "product_rating": "N/A",
+            "product_rating": product_rating,
             "currency": "N/A",
             "data": [],
             "webpage": webpage,
@@ -102,86 +102,62 @@ def amazon_crawler(url):
     try:
 
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, "a-price"))
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pinned-offer-top-id"]'))
         )
 
-        for price in element[1:]:
-            price_symbol = price.find_element_by_class_name("a-price-symbol").text
-            price_whole = price.find_element_by_class_name("a-price-whole").text
-            price_fraction = price.find_element_by_class_name("a-price-fraction").text
-
-            if price_whole:
-                price_list.append(f"{price_whole}.{price_fraction}")
-                product_codes.append(asin)
-
-        print("prices collected")
+        print("PINNED OFFER", element)
+        pinned_price = element.find_element_by_id('aod-price-0').text
+        print(pinned_price)
+        pinned_delivery = element.find_element_by_id('ddmDeliveryMessage').text
+        print(pinned_delivery)
+        price_list.append(pinned_price)
+        delivery_details.append(pinned_delivery)
     except:
-        print("prices collection problem")
+        print("pinned product price and delivery collection problem")
         pass
+
     try:
+
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.ID, "ddmDeliveryMessage"))
+            EC.presence_of_element_located((By.ID, "aod-pinned-offer-additional-content"))
         )
 
-        for delivery_detail in element[1:]:
-            details = delivery_detail.text
-            if details:
-                delivery_details.append(details)
+        pinned_shipper = element.find_element_by_xpath('//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/span').text
+        pinned_seller = element.find_element_by_xpath('//*[@id="aod-offer-soldBy"]/div/div/div[2]/a').text
+        pinned_seller_rating = element.find_element_by_xpath('//*[@id="seller-rating-count-{iter}"]/span').text
+        shippers.append(pinned_shipper)
+        seller_list.append(pinned_seller)
+        seller_ratings.append(pinned_seller_rating)
 
-        print("delivery details collected")
     except:
-        print("delivery details collection failed")
+        print("pinned shipper, seller, seller rating collection problem")
         pass
+
     try:
+
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.ID, "aod-offer-shipsFrom"))
+            EC.presence_of_all_element_located((By.XPATH, '//*[@id="aod-offer-list"]'))
         )
+        print("AOD LIST", element)
+        aod_offers = element.find_elements_by_id('aod-offer')
 
-        for sold_by in element[1:]:
-            shipper = sold_by.find_element_by_class_name("a-color-base").text
-            if shipper:
-                shippers.append(shipper)
-        print("shipper details collected")
+        print(aod_offers)
+
+        for aod_offer in aod_offers:
+            price = aod_offer.find_element_by_class_name("a-offscreen").text
+            delivery = aod_offer.find_element_by_id("ddmDeliveryMessage").text
+            shipper = aod_offer.find_element_by_xpath('//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/span').text
+            seller = aod_offer.find_element_by_xpath('//*[@id="aod-offer-soldBy"]/div/div/div[2]/a').text
+            rating = aod_offer.find_element_by_xpath('//*[@id="seller-rating-count-{iter}"]/span').text
+
+        print(price, delivery, shipper, seller, rating)
     except:
-        print("shipper details collection failed")
-        pass
-    try:
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.ID, "aod-offer-soldBy"))
-        )
-
-        for sold_by in element[1:]:
-            try:
-                seller = sold_by.find_element_by_class_name("a-link-normal").text
-                seller_rating = sold_by.find_element_by_id("seller-rating-count-{iter}").text
-                print(seller)
-
-                if seller:
-                    seller_list.append(seller)
-
-                if seller:
-                    seller_ratings.append(seller_rating)
-
-
-            except:
-                print("seller or seller rating collection failed")
-                seller = "Amazon.ae"
-                seller_list.append(seller)
-                seller_ratings.append("No ratings")
-                pass
-
-            try:
-                import_badge = sold_by.find_element_by_id('aod-import-badge').text
-                if seller:
-                    imports.append(import_badge)
-            except:
-                if seller:
-                    imports.append("Does not import internationally")
-
-        print("seller collected")
-
-    except:
-        print("seller collection failed")
+        price = "N/A"
+        delivery = "N/A"
+        shipper = "N/A"
+        seller = "N/A"
+        rating = "N/A"
+        print("offer list details collection problem")
         pass
 
     driver.quit()
