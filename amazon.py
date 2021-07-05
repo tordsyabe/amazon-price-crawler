@@ -122,9 +122,12 @@ def amazon_crawler(url):
             EC.presence_of_element_located((By.ID, "aod-pinned-offer-additional-content"))
         )
 
-        pinned_shipper = element.find_element_by_xpath('//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/span').text
-        pinned_seller = element.find_element_by_xpath('//*[@id="aod-offer-soldBy"]/div/div/div[2]/a').text
-        pinned_seller_rating = element.find_element_by_xpath('//*[@id="seller-rating-count-{iter}"]/span').text
+        pinned_shipper = element.find_element_by_id('//div[@id="aod-offer-shipsFrom"]').text
+        print("PINNED SHIPPER", pinned_shipper)
+        pinned_seller = element.find_element_by_xpath('//div[@id="aod-offer-soldBy"]').text
+        print("PINNED SELLER", pinned_seller)
+        pinned_seller_rating = element.find_element_by_xpath('//div[@id="seller-rating-count-{iter}"]/span').text
+        print("PINNED RATING", pinned_seller_rating)
         shippers.append(pinned_shipper)
         seller_list.append(pinned_seller)
         seller_ratings.append(pinned_seller_rating)
