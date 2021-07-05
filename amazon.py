@@ -168,7 +168,6 @@ def amazon_crawler(url):
         print(len(aod_offers))
 
         for aod_offer in aod_offers:
-            print(aod_offer.get_attribute('innerHTML'))
             price_whole = aod_offer.find_element_by_class_name(
                 'a-price-whole').text
             # print("PRICE", price_whole)
@@ -182,9 +181,9 @@ def amazon_crawler(url):
                 # print("DELIVERY", delivery)
 
             except:
-                tae = aod_offer.find_elements_by_class_name(
-                    'a-size-base a-color-base')
-                print("FAILED DELIVERY", tae)
+                delivery = aod_offer.find_elements_by_class_name(
+                    'aod-ship-charge')
+                print("FAILED DELIVERY", delivery)
                 pass
                 # print("DELIVERY", delivery)
 
