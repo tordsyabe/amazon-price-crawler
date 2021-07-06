@@ -105,16 +105,10 @@ def amazon_crawler(url):
             EC.presence_of_element_located((By.XPATH, '//*[@id="pinned-offer-top-id"]'))
         )
 
-        pinned_price_whole = element.find_element_by_class_name(
-            'a-price-whole').text
-        # print("PRICE", pinned_price_whole)
+        pinned_price_whole = element.find_element_by_class_name('a-price-whole').text
 
-        pinned_price_fraction = element.find_element_by_class_name(
-            'a-price-fraction').text
-        # print("PRICE", pinned_price_fraction)
-        pinned_delivery = element.find_element_by_id(
-            'ddmDeliveryMessage').text
-        # print("PINNED DELIVERY", pinned_delivery)
+        pinned_price_fraction = element.find_element_by_class_name('a-price-fraction').text
+        pinned_delivery = element.find_element_by_id('ddmDeliveryMessage').text
         price_list.append(f"{pinned_price_whole}.{pinned_price_fraction}")
         delivery_details.append(pinned_delivery)
 
@@ -130,19 +124,15 @@ def amazon_crawler(url):
 
         # print("PINNED OFFER CONTENT", element)
 
-        pinned_shipper = element.find_element_by_xpath(
-            '//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').get_attribute('innerHTML').strip()
-        pinned_seller = element.find_element_by_xpath(
-            '//div[@id="aod-offer-soldBy"]/div/div/div[2]/*').get_attribute('innerHTML').strip()
+        pinned_shipper = element.find_element_by_xpath('.//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
+        pinned_seller = element.find_element_by_xpath('.//div[@id="aod-offer-soldBy"]/div/div/div[2]/*').text
         try:
-            pinned_seller_rating = element.find_element_by_xpath(
-                '//div[@id="seller-rating-count-{iter}"]/span').get_attribute('innerHTML').strip()
+            pinned_seller_rating = element.find_element_by_xpath('.//div[@id="seller-rating-count-{iter}"]/span').text
         except:
             pinned_seller_rating = "N/A"
             pass
         try:
-            element.find_element_by_xpath(
-                '//*[@id="aod-import-badge"]/span')
+            element.find_element_by_xpath('.//*[@id="aod-import-badge"]')
             pinned_seller_import = "International Shipping"
         except:
             pinned_seller_import = "No international shipping"
@@ -163,46 +153,51 @@ def amazon_crawler(url):
             EC.presence_of_element_located((By.ID, 'aod-offer-list'))
         )
         # print("AOD LIST", element)
-        aod_offers = element.find_elements_by_id('aod-offer')
+        aod_offers = element.find_elements_by_xpath('.//*[@id="aod-offer"]')
 
         print(len(aod_offers))
 
         for aod_offer in aod_offers:
-            price_whole = aod_offer.find_element_by_class_name(
-                'a-price-whole').text
+            price_whole = aod_offer.find_element_by_xpath('.//span[@class="a-price-whole"]').text
             # print("PRICE", price_whole)
 
-            price_fraction = aod_offer.find_element_by_xpath(
-                'a-price-fraction').text
-            # print("PRICE", price_fraction)
+            price_fraction = aod_offer.find_element_by_xpath('.//span[@class="a-price-fraction"]').text
             try:
-                delivery = aod_offer.find_element_by_xpath(
-                    'div[@id="ddmDeliveryMessage"]').get_attribute('innerHTML').strip()
-                # print("DELIVERY", delivery)
+                delivery = aod_offer.find_element_by_xpath('.//div[@id="ddmDeliveryMessage"]').text
 
             except:
-                # delivery = aod_offer.find_element_by_xpath(
-                #     './/*[@id="aod-offer-price"]/div/div/div[2]/div/div/div[1]/div[4]').text
-                print("FAILED DELIVERY")
+                delivery = aod_offer.find_element_by_xpath('.//div[@class="a-row aod-ship-charge"]').text
                 pass
-                # print("DELIVERY", delivery)
 
-            ship_by = aod_offer.find_element_by_xpath(
-                '//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/span').get_attribute('innerHTML').strip()
-            # print("SHIP_BY ",ship_by)
-            # delivery = aod_offer.find_element_by_id("ddmDeliveryMessage").text
-            # shipper = aod_offer.find_element_by_xpath('//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/span').text
-            # seller = aod_offer.find_element_by_xpath('//*[@id="aod-offer-soldBy"]/div/div/div[2]/a').text
-            # rating = aod_offer.find_element_by_xpath('//*[@id="seller-rating-count-{iter}"]/span').text
-
-            print(price_whole + "." + price_fraction, delivery, ship_by)
-            # price_list.append(f"{price_whole}.{price_fraction}")
-            # delivery_details(delivery)
+            ship_by = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
+            # try:
+            #     vendor = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-soldBy"]')
+            #     print(vendor)
+            # except:
+            #     vendor= "N/A"
+            try:
+                rating = aod_offer.find_element_by_xpath('.//*[@id="seller-rating-count-{iter}"]/span').text
+            except:
+                rating = "N/A"
+                pass
+            try:
+                aod_offer.find_element_by_xpath('.//*[@id="aod-import-badge"]')
+                seller_import = "International Shipping"
+            except:
+                seller_import = "No international shipping"
+                pass
+            print(rating)
+            print(price_whole + "." + price_fraction, ship_by, delivery)
+            price_list.append(f"{price_whole}.{price_fraction}")
+            shippers.append(ship_by)
+            delivery_details.append(delivery)
+            seller_ratings.append(rating)
+            imports.append(seller_import)
+            # seller_list(vendor)
 
     except:
         print("offer list details collection problem")
         pass
-
 
     driver.quit()
 
