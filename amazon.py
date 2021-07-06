@@ -170,11 +170,11 @@ def amazon_crawler(url):
                 pass
 
             ship_by = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
-            # try:
-            #     vendor = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-soldBy"]')
-            #     print(vendor)
-            # except:
-            #     vendor= "N/A"
+            vendor = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, './/div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*'))
+            )
+            print(vendor.get_attribute('innerHTML').strip())
+
             try:
                 rating = aod_offer.find_element_by_xpath('.//*[@id="seller-rating-count-{iter}"]/span').text
             except:
@@ -193,7 +193,8 @@ def amazon_crawler(url):
             delivery_details.append(delivery)
             seller_ratings.append(rating)
             imports.append(seller_import)
-            # seller_list(vendor)
+            seller_list.append(vendor)
+
 
     except:
         print("offer list details collection problem")
