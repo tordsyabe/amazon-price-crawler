@@ -14,7 +14,7 @@ def noon_crawler(url):
     delivery_list = []
     fulfilled_list = []
     price_symbol = ""
-    webpage = ""
+    webpage = "www.noon.ae"
     asin = ""
 
     date_today = datetime.datetime.now()
@@ -27,16 +27,14 @@ def noon_crawler(url):
     if len(split_url) > 1:
         for item in split_url:
 
-            if "www." in item:
-                webpage = item
             if "N" in item:
                 asin = item
                 break
 
     else:
         asin = split_url[0]
-
-    driver.get('https://www.noon.com/uae-en/search?q=' + asin.strip())
+    product_url_link = 'https://www.noon.com/uae-en/search?q=' + asin.strip()
+    driver.get(product_url_link)
 
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
@@ -121,7 +119,10 @@ def noon_crawler(url):
             "currency": "AED",
             "data": s_data,
             "webpage": webpage,
-            "date": timestamp
+            "date": timestamp,
+            "error": "",
+            "number_of_results": len(s_data),
+            "product_url_link": product_url_link
         }
 
         driver.quit()
@@ -218,7 +219,11 @@ def noon_crawler(url):
         "currency": "AED",
         "data": data,
         "webpage": webpage,
-        "date": timestamp
+        "date": timestamp,
+        "error": "",
+        "number_of_results": len(price_list),
+        "product_url_link": product_url_link
+
     }
 
     return data_list

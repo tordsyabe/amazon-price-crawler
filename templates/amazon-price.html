@@ -76,13 +76,16 @@
                 <h6>Ratings: {{table_data["product_rating"]}}</h6>
             </div>
             <div class="col-3">
-                <h6>Webpage: {{table_data["webpage"]}}</h6>
+                <h6>{{table_data["webpage"]}}</h6>
             </div>
             <div class="col-3">
-                <h6>Currency: {{table_data["currency"]}}</h6>
+                <h6>Currency: AED</h6>
             </div>
             <div class="col-3">
-                <h6>Date: {{table_data["date"]}}</h6>
+                <h6>Search Date: {{table_data["date"]}}</h6>
+            </div>
+            <div class="col-12 mt-3">
+                <p class="text-muted">Search Result/s: {{table_data["number_of_results"]}}</p>
             </div>
 
         </div>
@@ -118,7 +121,10 @@
         {% endfor %}
         </tbody>
     </table>
+
     {% endif %}
+
+     <p class="text-muted mt-5">Product URL Link: <a href="{{table_data['product_url_link']}}">{{table_data["product_url_link"]}}</a></p>
 </div>
 
 {% endif %}

@@ -13,7 +13,7 @@ def amazon_crawler(url):
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-extensions')
     price_symbol = ""
-    webpage = ""
+    webpage = "www.amazon.ae"
     data = []
 
     seller_list = []
@@ -31,11 +31,10 @@ def amazon_crawler(url):
 
     split_url = url.split("/")
 
+    search_result = 0
+
     if len(split_url) > 1:
         for item in split_url:
-
-            if "www." in item:
-                webpage = item
             if "B0" in item:
                 asin = item
                 break
@@ -44,8 +43,8 @@ def amazon_crawler(url):
         asin = split_url[0]
 
     print(asin)
-
-    driver.get('https://www.amazon.ae/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1')
+    product_url_link = 'https://www.amazon.ae/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
+    driver.get(product_url_link)
     try:
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
@@ -67,6 +66,7 @@ def amazon_crawler(url):
         product_description = element.text
     except:
         print("Failed to collect product description")
+        product_description = "N/A"
         pass
 
     try:
@@ -81,7 +81,7 @@ def amazon_crawler(url):
 
     try:
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="aod-pinned-offer-show-more-link"]'))
+            EC.presence_of_element_located((By.XPATH, '//a[@id="aod-pinned-offer-show-more-link"]'))
         )
         element.click()
         print("see more button clicked")
@@ -96,7 +96,9 @@ def amazon_crawler(url):
             "data": [],
             "webpage": webpage,
             "date": timestamp,
-            "error": "Product currently has no sellers."
+            "error": "Product currently has no sellers.",
+            "number_of_results": 0,
+            "product_url_link": product_url_link
         }
 
     try:
@@ -105,12 +107,15 @@ def amazon_crawler(url):
             EC.presence_of_element_located((By.XPATH, '//*[@id="pinned-offer-top-id"]'))
         )
 
-        pinned_price_whole = element.find_element_by_class_name('a-price-whole').text
+        pinned_price_whole = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[2]').text
 
-        pinned_price_fraction = element.find_element_by_class_name('a-price-fraction').text
-        pinned_delivery = element.find_element_by_id('ddmDeliveryMessage').text
+        pinned_price_fraction = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[3]').text
+        pinned_delivery = element.find_element_by_xpath('.//*[@id="ddmDeliveryMessage"]').text
         price_list.append(f"{pinned_price_whole}.{pinned_price_fraction}")
         delivery_details.append(pinned_delivery)
+
+        if pinned_price_whole:
+            search_result += 1
 
     except:
         print("pinned product price and delivery collection problem")
@@ -170,11 +175,15 @@ def amazon_crawler(url):
                 pass
 
             ship_by = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
-            vendor = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, './/div[@id="aod-offer-shipsFrom"]/div/div/div[2]/a'))
-            )
-            # print(vendor.find_element_by_name('a'))
 
+            vendor = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-soldBy"]/div/div/div[2]/*').text
+            # vendor = WebDriverWait(driver, 10).until(
+            #     EC.presence_of_element_located((By.XPATH, './/div[@id="aod-offer-shipsFrom"]'))
+            # )
+            print("SELLER: ", vendor)
+
+            # v = vendor.find_element_by_tag_name('a').text
+            # seller_list.append(v.text)
             try:
                 rating = aod_offer.find_element_by_xpath('.//*[@id="seller-rating-count-{iter}"]/span').text
             except:
@@ -186,14 +195,15 @@ def amazon_crawler(url):
             except:
                 seller_import = "No international shipping"
                 pass
-            print(rating)
-            print(price_whole + "." + price_fraction, ship_by, delivery)
+            # print(rating)
+            # print(price_whole + "." + price_fraction, ship_by, delivery)
             price_list.append(f"{price_whole}.{price_fraction}")
             shippers.append(ship_by)
             delivery_details.append(delivery)
             seller_ratings.append(rating)
             imports.append(seller_import)
-            seller_list.append(vendor.text)
+            seller_list.append(vendor)
+
 
 
     except:
@@ -234,7 +244,9 @@ def amazon_crawler(url):
             "data": data,
             "webpage": webpage,
             "date": timestamp,
-            "error": "There was a problem with the data collected"
+            "error": "There was a problem with the data collected",
+            "number_of_results": len(aod_offers) + search_result,
+            "product_url_link": product_url_link
         }
 
     data_list = {
@@ -245,7 +257,10 @@ def amazon_crawler(url):
         "data": data,
         "webpage": webpage,
         "date": timestamp,
-        "error": ""
+        "error": "",
+        "number_of_results": len(aod_offers) + search_result,
+        "product_url_link": product_url_link
+
     }
 
     return data_list
