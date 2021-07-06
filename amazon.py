@@ -132,7 +132,7 @@ def amazon_crawler(url):
         pinned_shipper = element.find_element_by_xpath('.//*[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
         pinned_seller = element.find_element_by_xpath('.//div[@id="aod-offer-soldBy"]/div/div/div[2]/*').text
         try:
-            pinned_seller_rating = element.find_element_by_xpath('.//div[@id="seller-rating-count-{iter}"]/span').text
+            pinned_seller_rating = element.find_element_by_xpath('.//span[@id="seller-rating-count-{iter}"]/span').text
         except:
             pinned_seller_rating = "N/A"
             pass
