@@ -171,9 +171,9 @@ def amazon_crawler(url):
 
             ship_by = aod_offer.find_element_by_xpath('.//div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*').text
             vendor = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, './/div[@id="aod-offer-shipsFrom"]/div/div/div[2]/*'))
+                EC.presence_of_element_located((By.XPATH, './/div[@id="aod-offer-shipsFrom"]/div/div/div[2]/a'))
             )
-            print(vendor.get_attribute('innerHTML').strip())
+            # print(vendor.find_element_by_name('a'))
 
             try:
                 rating = aod_offer.find_element_by_xpath('.//*[@id="seller-rating-count-{iter}"]/span').text
@@ -193,7 +193,7 @@ def amazon_crawler(url):
             delivery_details.append(delivery)
             seller_ratings.append(rating)
             imports.append(seller_import)
-            seller_list.append(vendor)
+            seller_list.append(vendor.text)
 
 
     except:
