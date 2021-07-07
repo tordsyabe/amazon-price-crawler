@@ -22,8 +22,7 @@ def noon_crawler(url):
     delivery_list = []
     fulfilled_list = []
     price_symbol = ""
-    webpage = "www.noon.ae"
-    asin = ""
+    webpage = "www.noon.com"
 
     date_today = datetime.datetime.now()
     timestamp = date_today.strftime("%Y-%m-%d %H:%M:%S")
