@@ -42,19 +42,20 @@ def noon_crawler(url):
         asin = split_url[0]
 
     product_url_link = 'https://www.noon.com/uae-en/search?q=' + asin.strip()
-    driver.get(product_url_link)
+    # driver.get(product_url_link)
 
+    driver.get("https://www.noon.com/uae-en/macbook-pro-13-inch-display-apple-m1-chip-with-8-core-processor-and-8-core-graphics-8gb-ram-256gb-ssd-english-keyboard-new-2020-space-grey/N41910684A/p?o=b76b12cfb17110ea")
     print(product_url_link)
-    try:
-        element = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
-        )
-
-        element.click()
-        print("clicked! product container")
-    except:
-        print("failed to clicked! product container")
-        pass
+    # try:
+    #     element = WebDriverWait(driver, 20).until(
+    #         EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
+    #     )
+    #
+    #     element.click()
+    #     print("clicked! product container")
+    # except:
+    #     print("failed to clicked! product container")
+    #     pass
 
     try:
         element = WebDriverWait(driver, 10).until(
