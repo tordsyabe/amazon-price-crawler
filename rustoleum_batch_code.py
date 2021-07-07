@@ -24,6 +24,8 @@ def convert_batch_to_mfg(batch_codes):
 
         stripped_bc = batch_code.strip()
         batch_code = list(stripped_bc)
+        if len(batch_code) > 6:
+            batch_code.pop(0)
 
         if len(batch_code) < 6:
             batch = {
