@@ -7,6 +7,8 @@ import os
 
 
 def noon_crawler(url):
+
+    print("entered noon_crawler")
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -38,26 +40,32 @@ def noon_crawler(url):
 
     else:
         asin = split_url[0]
+
     product_url_link = 'https://www.noon.com/uae-en/search?q=' + asin.strip()
     driver.get(product_url_link)
+
+    print(product_url_link)
 
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
     )
 
     element.click()
+    print("clicked! product container")
 
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, f'//div[@data-qa="pdp-brand-{asin.strip()}"]'))
     )
 
     brand = element.text
+    print("got brand")
 
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, f'//h1[@data-qa="pdp-name-{asin.strip()}"]'))
     )
 
     desc = element.text
+    print("got desc")
 
     product_description = brand + " " + desc
 
@@ -67,6 +75,7 @@ def noon_crawler(url):
         )
 
         element.click()
+        print("clicked allOffer")
     except:
 
         print("View all offer click failed")
@@ -126,7 +135,7 @@ def noon_crawler(url):
             "webpage": webpage,
             "date": timestamp,
             "error": "",
-            "number_of_results": len(s_data),
+            "number_of_results": 1,
             "product_url_link": product_url_link
         }
 
