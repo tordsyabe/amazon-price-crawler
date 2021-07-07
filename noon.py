@@ -46,7 +46,7 @@ def noon_crawler(url):
 
     print(product_url_link)
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
         )
 
