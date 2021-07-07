@@ -45,29 +45,40 @@ def noon_crawler(url):
     driver.get(product_url_link)
 
     print(product_url_link)
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//div[@class="productContainer"]'))
-    )
+        element.click()
+        print("clicked! product container")
+    except:
+        print("failed to clicked! product container")
+        pass
 
-    element.click()
-    print("clicked! product container")
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, f'//div[@data-qa="pdp-brand-{asin.strip()}"]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'//div[@data-qa="pdp-brand-{asin.strip()}"]'))
-    )
+        brand = element.text
+        print("got brand")
+    except:
+        print("failed to click brand")
+        pass
 
-    brand = element.text
-    print("got brand")
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, f'//h1[@data-qa="pdp-name-{asin.strip()}"]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'//h1[@data-qa="pdp-name-{asin.strip()}"]'))
-    )
+        desc = element.text
+        print("got desc")
 
-    desc = element.text
-    print("got desc")
-
-    product_description = brand + " " + desc
+        product_description = brand + " " + desc
+    except:
+        print("failed desc")
+        pass
 
     try:
         element = WebDriverWait(driver, 5).until(
@@ -142,72 +153,78 @@ def noon_crawler(url):
         driver.quit()
 
         return s_data_list
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class, "y6omgk-1")]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class, "y6omgk-1")]'))
-    )
+        for price in element:
+            product_price = price.find_element_by_tag_name('strong')
 
-    for price in element:
-        product_price = price.find_element_by_tag_name('strong')
+            price_list.append(product_price.text)
+            print(product_price.text)
+            try:
+                star = price.find_element_by_class_name('starValue')
+                rating = price.find_element_by_class_name('normalizedNumber')
+                start_list.append(star.text)
+                rating_list.append(rating.text)
+            except:
+                start_list.append("No star")
+                rating_list.append("No rating")
+    except:
+        print("failed to get details")
+        pass
 
-        price_list.append(product_price.text)
-        print(product_price.text)
-        try:
-            star = price.find_element_by_class_name('starValue')
-            rating = price.find_element_by_class_name('normalizedNumber')
-            start_list.append(star.text)
-            rating_list.append(rating.text)
-        except:
-            start_list.append("No star")
-            rating_list.append("No rating")
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//div[@class="offerSname"]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//div[@class="offerSname"]'))
-    )
+        for seller in element:
+            seller_list.append(seller.text)
+            print(seller.text)
+    except:
+        print("failed to get sellers")
+        pass
 
-    for seller in element:
-        seller_list.append(seller.text)
-        print(seller.text)
+    try:
 
-    # element = WebDriverWait(driver, 10).until(
-    #     EC.presence_of_all_elements_located((By.XPATH, '//div[@class="starValue"]'))
-    # )
-    #
-    # for star_value in element:
-    #     start_list.append(star_value.text)
-    #     print(star_value.text)
-    #
-    # element = WebDriverWait(driver, 10).until(
-    #     EC.presence_of_all_elements_located((By.XPATH, '//div[@class="normalizedNumber"]'))
-    # )
-    #
-    # for rating in element:
-    #     rating_list.append(rating.text)
-    #     print(rating.text)
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//div[@type="cart"]/div'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//div[@type="cart"]/div'))
-    )
+        for delivery in element:
+            delivery_list.append(delivery.text)
+            print(delivery.text)
 
-    for delivery in element:
-        delivery_list.append(delivery.text)
-        print(delivery.text)
+    except:
+        print("failed to get delivery")
+        pass
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="fulfilment_express_v2"]'))
-    )
+    try:
 
-    for express in element:
-        fulfilled_list.append("Express")
-        print("Express")
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="fulfilment_express_v2"]'))
+        )
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="marketplace"]'))
-    )
+        for express in element:
+            fulfilled_list.append("Express")
+            print("Express")
+    except:
+        print("failed fulfillment express")
+        pass
 
-    for market in element:
-        fulfilled_list.append("Market Place")
-        print("Market")
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="marketplace"]'))
+        )
+
+        for market in element:
+            fulfilled_list.append("Market Place")
+            print("Market")
+    except:
+        print("failed fulfillment market")
+        pass
 
     print(len(price_list), len(seller_list), len(rating_list), len(start_list), len(delivery_list), len(fulfilled_list))
     print(price_list, seller_list, rating_list, start_list, delivery_list, fulfilled_list)
