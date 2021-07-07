@@ -4,9 +4,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import datetime
+import os
 
 
 def noon_crawler(url):
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
     seller_list = []
     price_list = []
     rating_list = []
@@ -19,8 +27,6 @@ def noon_crawler(url):
 
     date_today = datetime.datetime.now()
     timestamp = date_today.strftime("%Y-%m-%d %H:%M:%S")
-
-    driver = webdriver.Chrome('chromedriver')
 
     split_url = url.split("/")
 
