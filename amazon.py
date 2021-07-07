@@ -16,7 +16,7 @@ def amazon_crawler(url):
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     # os.environ.get("CHROMEDRIVER_PATH")
     price_symbol = ""
-    webpage = "www.amazon.ae"
+    webpage = ""
     data = []
 
     seller_list = []
@@ -36,6 +36,10 @@ def amazon_crawler(url):
 
     if len(split_url) > 1:
         for item in split_url:
+
+            if "www." in item:
+                webpage = item
+
             if "B0" in item:
                 asin = item
                 break
@@ -44,7 +48,7 @@ def amazon_crawler(url):
         asin = split_url[0]
 
     print(asin)
-    product_url_link = 'https://www.amazon.ae/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
+    product_url_link = 'https://' + webpage + '/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
     driver.get(product_url_link)
     try:
         element = WebDriverWait(driver, 10).until(
