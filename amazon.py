@@ -50,6 +50,7 @@ def amazon_crawler(url):
     print(asin)
     product_url_link = 'https://' + webpage + '/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
     driver.get(product_url_link)
+    print(product_url_link)
     try:
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
