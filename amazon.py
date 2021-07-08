@@ -46,6 +46,7 @@ def amazon_crawler(url):
 
     else:
         asin = split_url[0]
+        webpage = "www.amazon.ae"
 
     print(asin)
     product_url_link = 'https://' + webpage + '/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
