@@ -15,7 +15,6 @@ def amazon_crawler(url):
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     # os.environ.get("CHROMEDRIVER_PATH")
-    price_symbol = ""
     webpage = ""
     data = []
 
@@ -113,6 +112,8 @@ def amazon_crawler(url):
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="pinned-offer-top-id"]'))
         )
+
+        pinned_price_symbol = element.find_element_by_xpath('.//*[@id="aod-price-1"]/span/span[2]/span[1]').text
 
         pinned_price_whole = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[2]').text
 
@@ -247,7 +248,7 @@ def amazon_crawler(url):
             "code": asin,
             "description": product_description,
             "product_rating": product_rating,
-            "currency": price_symbol,
+            "currency": pinned_price_symbol,
             "data": data,
             "webpage": webpage,
             "date": timestamp,
