@@ -54,18 +54,18 @@ def amazon_crawler(url):
     product_url_link = 'https://' + webpage + '/dp/' + asin.strip() + '/ref=olp_aod_redir?_encoding=UTF8&aod=1'
     driver.get(product_url_link)
     print(product_url_link)
-    # try:
-    #     element = WebDriverWait(driver, 10).until(
-    #         EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
-    #     )
-    #
-    #     driver.execute_script('arguments[0].scrollTo(0, arguments[0].scrollHeight)', element)
-    #     print("scrolled down")
-    #     driver.execute_script('arguments[0].scrollTo(0, 0)', element)
-    #     print("scrolled up")
-    # except:
-    #     print("failed")
-    #     pass
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'all-offers-display-scroller')),
+        )
+
+        driver.execute_script('arguments[0].scrollTo(0, arguments[0].scrollHeight)', element)
+        print("scrolled down")
+        driver.execute_script('arguments[0].scrollTo(0, 0)', element)
+        print("scrolled up")
+    except:
+        print("failed")
+        pass
 
     try:
         element = WebDriverWait(driver, 10).until(
