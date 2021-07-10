@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def amazon_crawler(url):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
@@ -115,11 +116,14 @@ def amazon_crawler(url):
             EC.presence_of_element_located((By.XPATH, '//*[@id="pinned-offer-top-id"]'))
         )
 
-        pinned_price_symbol = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[1]').text
+        pinned_price_symbol = element.find_element_by_xpath(
+            './/div[contains(@id, "aod-price")]/span/span[2]/span[1]').text
 
-        pinned_price_whole = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[2]').text
+        pinned_price_whole = element.find_element_by_xpath(
+            './/div[contains(@id, "aod-price")]/span/span[2]/span[2]').text
 
-        pinned_price_fraction = element.find_element_by_xpath('.//div[contains(@id, "aod-price")]/span/span[2]/span[3]').text
+        pinned_price_fraction = element.find_element_by_xpath(
+            './/div[contains(@id, "aod-price")]/span/span[2]/span[3]').text
         pinned_delivery = element.find_element_by_xpath('.//*[@id="ddmDeliveryMessage"]').text
         price_list.append(f"{pinned_price_whole}.{pinned_price_fraction}")
         delivery_details.append(pinned_delivery)
