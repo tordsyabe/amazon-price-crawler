@@ -64,7 +64,7 @@ def amazon_crawler(url):
         driver.execute_script('arguments[0].scrollTo(0, 0)', element)
         print("scrolled up")
     except:
-        print("failed")
+        print("failed to scroll down and up")
         pass
 
     try:
