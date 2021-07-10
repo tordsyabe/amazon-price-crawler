@@ -1,15 +1,7 @@
-url = "https://www.noon.com/uae-en/galaxy-tab-a-2019-8-0-inch-32gb-2gb-ram-wi-fi-4g-lte-black/N29806819A/p?o=e2b47c5875da809a"
+import os
+from dotenv import load_dotenv
 
-urls = url.split("/")
+load_dotenv()
 
-print(urls)
-
-if len(urls) > 1:
-    for item in urls:
-
-        if "www." in item:
-            webpage = item
-        if "N2" in item:
-            asin = item
-
-print(webpage, asin)
+print(os.environ.get("CHROMEDRIVER_PATH"))
+print(os.environ.get("GOOGLE_CHROME_BIN"))
