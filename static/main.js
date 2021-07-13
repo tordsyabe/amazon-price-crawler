@@ -14,4 +14,10 @@ $(document).ready(function() {
         $("#url_form").submit()
     });
 
-});
+
+
+    });
+
+$(document).ready(function () {
+      $('#emailsTable').DataTable();
+      });

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <title>Active Emails</title>
+
+</head>
+
+<body style="font-size: 0.89rem;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Alrais Trading</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Price Comparison</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('rustoleum_batch_code') }}">Rustoleum Batch Code</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('active_emails') }}">Active Emails</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mt-5">Active Emails</h1>
+        <h5 class="text-muted">Alrais Ent Group active emails</h5>
+
+        <div class="mt-5">
+            <table id="emailsTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Email address</th>
+                    <th>Employee</th>
+                    <th>Designation</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+
+
+                </thead>
+                <tbody>
+                {% for email in emails %}
+                <tr>
+                    <td>{{email.email_address}}</td>
+                    <td>{{email.employee_name}}</td>
+                    <td>{{email.designation}}</td>
+                    <td>{{email.status}}</td>
+                    <td>Edit/ Delete</td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <form method="POST" class="mt-5" id="email_address_form">
+            {{ form.csrf_token }}
+            <div class="form-row">
+                <div class="col-3">
+                    {{ form.email_address.label }}
+
+                    {{ form.email_address(class_="form-control") }}
+
+                </div>
+                <div class="col-3">
+                    {{ form.employee_name.label }}
+
+                    {{ form.employee_name(class_="form-control") }}
+
+                </div>
+                <div class="col-2">
+                    {{ form.designation.label }}
+
+                    {{ form.designation(class_="form-control") }}
+
+                </div>
+                <div class="col-2">
+                    {{ form.status.label }}
+
+                    {{ form.status(class_="form-control") }}
+
+                </div>
+                <div class="col-2 align-self-end">
+                    <input class="btn btn-primary" id="addEmailSubmitBtn" type="submit" value="Add"/>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    </body>
+</html>

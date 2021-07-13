@@ -1,10 +1,53 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_migrate import Migrate
+from flask_wtf import FlaskForm
+from wtforms import StringField, SelectField
+from wtforms.validators import DataRequired
+from dataclasses import dataclass
+
+from flask_sqlalchemy import SQLAlchemy
 
 from amazon import amazon_crawler
 from noon import noon_crawler
 from rustoleum_batch_code import convert_batch_to_mfg
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "osdasdfhjklljqw"
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+@dataclass
+class Email(db.Model):
+    __tablename__ = "email"
+
+    id: int = db.Column(db.Integer, primary_key=True)
+    email_address: str = db.Column(db.String(255), nullable=False)
+    employee_name: str = db.Column(db.String(64), nullable=False)
+    designation: str = db.Column(db.String(64), nullable=False)
+    status: str = db.Column(db.String(64), nullable=False)
+
+    def __init__(self, email_address, employee_name, designation, status):
+        self.email_address = email_address
+        self.employee_name = employee_name
+        self.designation = designation
+        self.status = status
+
+
+STATUS_CHOICE = [('active', 'Active'), ('restricted', 'Restricted'), ('inactive', "Inactive")]
+
+
+class EmailForm(FlaskForm):
+    email_address = StringField("Email Address", validators=[DataRequired()])
+    employee_name = StringField("Employee", validators=[DataRequired()])
+    designation = StringField("Designation", validators=[DataRequired()])
+    status = SelectField(u'Status', choices=STATUS_CHOICE)
 
 
 @app.route("/", methods=['GET'])
@@ -59,6 +102,36 @@ def crawler():
         return render_template('amazon-price.html', table_data=table_data)
 
 
+@app.route("/active-emails", methods=["GET", "POST"])
+def active_emails():
+    form = EmailForm()
+
+    emails = Email.query.all()
+
+    if request.method == "POST" and form.validate_on_submit():
+        email = form.email_address.data
+        empl = form.employee_name.data
+        designation = form.designation.data
+        status = form.status.data
+
+        new_email = Email(email, empl, designation, status)
+
+        db.session.add(new_email)
+        db.session.commit()
+
+        return redirect(url_for("active_emails"))
+
+    return render_template("active-emails.html", form=form, emails=emails)
+
+
+@app.route("/api/emails", methods=["GET"])
+def email_api():
+    emails = Email.query.all()
+
+    return jsonify(emails)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+
     app.debug(True)
