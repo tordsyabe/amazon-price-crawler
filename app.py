@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 from wtforms.validators import DataRequired
 from dataclasses import dataclass
+from functools import wraps
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,6 +12,18 @@ from amazon import amazon_crawler
 from noon import noon_crawler
 from rustoleum_batch_code import convert_batch_to_mfg
 import os
+
+def basic_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if auth and auth.username == "alrais" and auth.password == "alraisgroup@2021":
+            return f(*args, **kwargs)
+
+        return make_response("Could not verify login, go back <a href='/'>Home</a>", 401, {"WWW-Authenticate": "Basic realm='Login Required'"})
+
+    return decorated
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -103,6 +116,7 @@ def crawler():
 
 
 @app.route("/active-emails", methods=["GET", "POST"])
+@basic_auth
 def active_emails():
     form = EmailForm()
 
@@ -125,8 +139,11 @@ def active_emails():
 
 
 @app.route("/api/emails", methods=["GET"])
+@basic_auth
 def email_api():
     emails = Email.query.all()
+
+    print(emails)
 
     return jsonify(emails)
 
