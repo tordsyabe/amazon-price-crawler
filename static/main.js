@@ -37,6 +37,12 @@ $(document).ready(function () {
             $('select[id="status"').val($(this).parent().siblings()[4].textContent).change();;
         });
     });
+
+    $('.delete-email-btn').each(function(){
+    $(this).on('click', function(){
+        $('#delete_email_address_form input[id="id"').val($(this).data("id"));
+    });
+    });
 });
 
 $(document).ready(function(){

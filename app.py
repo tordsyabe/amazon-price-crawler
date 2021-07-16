@@ -124,6 +124,16 @@ def crawler():
 
         return render_template('amazon-price.html', table_data=table_data)
 
+@app.route("/delete-email", methods=["POST"])
+@basic_auth
+def delete_email():
+    form = EmailForm()
+    if request.method == "POST":
+        email_to_delete = Email.query.get(int(form.id.data))
+        db.session.delete(email_to_delete)
+        db.session.commit()
+
+        return redirect(url_for("active_emails"))
 
 @app.route("/active-emails", methods=["GET", "POST"])
 @basic_auth
