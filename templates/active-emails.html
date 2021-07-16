@@ -35,8 +35,19 @@
     </div>
 </nav>
 <div class="container ">
-    <h1 class="mt-5">Active Emails</h1>
-    <h5 class="text-muted">Alrais Ent Group active emails</h5>
+    <div class="row mt-5 align-items-center">
+        <div class="col-6">
+            <h1>Active Emails</h1>
+            <h5 class="text-muted">Alrais Ent Group active emails</h5>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                    data-target="#questionFormModal">Add Email Address
+            </button>
+            <button class="btn btn-primary float-right mr-2" id="copyEmailAddresses">Copy emails</button>
+        </div>
+    </div>
+
 
     <div class="my-5">
         <table id="emailsTable" class="table table-bordered">
@@ -45,6 +56,7 @@
                 <th>Email address</th>
                 <th>Employee</th>
                 <th>Designation</th>
+                <th>Department</th>
                 <th>Status</th>
                 <th class="text-center">Actions</th>
             </tr>
@@ -57,6 +69,7 @@
                 <td>{{email.email_address}}</td>
                 <td>{{email.employee_name}}</td>
                 <td>{{email.designation}}</td>
+                <td>{{email.department}}</td>
                 <td>{{email.status}}</td>
                 <td>Edit/ Delete</td>
 
@@ -67,7 +80,6 @@
 
     </div>
     <textarea class="emailAdds" readonly style="position: absolute; left: -9999px; opacity: 0;"></textarea>
-    <button class="btn btn-secondary w-100" id="copyEmailAddresses">Copy emails</button>
     <div class="alert alert-info" role="alert" id="copyAlert" style="display: none;">
         Email addresses copied to clipboard.
         <button type="button" class="close" aria-label="Close" id="closeCopyAlert">
@@ -75,37 +87,64 @@
         </button>
     </div>
 
-    <form method="POST" class="my-5" id="email_address_form">
-        {{ form.csrf_token }}
-        <div class="form-row">
-            <div class="col-3">
-                {{ form.email_address.label }}
 
-                {{ form.email_address(class_="form-control") }}
+</div>
 
-            </div>
-            <div class="col-3">
-                {{ form.employee_name.label }}
-                {{ form.employee_name(class_="form-control") }}
-            </div>
-            <div class="col-2">
-                {{ form.designation.label }}
+<div class="modal fade" id="questionFormModal" tabindex="-1" role="dialog" aria-labelledby="questionFormModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" class="my-2" id="email_address_form">
 
-                {{ form.designation(class_="form-control") }}
+                <div class="modal-header">
+                    <h5 class="modal-title">New email address</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ form.csrf_token }}
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form.email_address.label }}
 
-            </div>
-            <div class="col-2">
-                {{ form.status.label }}
+                            {{ form.email_address(class_="form-control") }}
 
-                {{ form.status(class_="form-control") }}
+                        </div>
+                        <div class="col-12">
+                            {{ form.employee_name.label }}
+                            {{ form.employee_name(class_="form-control") }}
+                        </div>
+                        <div class="col-12">
+                            {{ form.designation.label }}
 
-            </div>
-            <div class="col-2 align-self-end">
-                <input class="btn btn-primary" id="addEmailSubmitBtn" type="submit" value="Add"/>
-            </div>
+                            {{ form.designation(class_="form-control") }}
+
+                        </div>
+                        <div class="col-12">
+                            {{ form.department.label }}
+
+                            {{ form.department(class_="form-control") }}
+
+                        </div>
+                        <div class="col-12">
+                            {{ form.status.label }}
+
+                            {{ form.status(class_="form-control") }}
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <!--                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>-->
+                    <button type="submit" class="btn btn-primary btn-sm" id="addEmailSubmitBtn">Add</button>
+                </div>
+
+            </form>
         </div>
-
-    </form>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

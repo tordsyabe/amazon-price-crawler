@@ -13,14 +13,17 @@ from noon import noon_crawler
 from rustoleum_batch_code import convert_batch_to_mfg
 import os
 
+
 def basic_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        if auth and auth.username == os.environ.get("BASIC_AUTH_USERNAME") and auth.password == os.environ.get("BASIC_AUTH_PASSWORD"):
+        if auth and auth.username == os.environ.get("BASIC_AUTH_USERNAME") and auth.password == os.environ.get(
+                "BASIC_AUTH_PASSWORD"):
             return f(*args, **kwargs)
 
-        return make_response("Could not verify login, go back <a href='/'>Home</a>", 401, {"WWW-Authenticate": "Basic realm='Login Required'"})
+        return make_response("Could not verify login, go back <a href='/'>Home</a>", 401,
+                             {"WWW-Authenticate": "Basic realm='Login Required'"})
 
     return decorated
 
@@ -44,22 +47,28 @@ class Email(db.Model):
     email_address: str = db.Column(db.String(255), nullable=False)
     employee_name: str = db.Column(db.String(64), nullable=False)
     designation: str = db.Column(db.String(64), nullable=False)
-    status: str = db.Column(db.String(64), nullable=False)
+    department: str = db.Column(db.String(64))
+    status: str = db.Column(db.String(64))
 
-    def __init__(self, email_address, employee_name, designation, status):
+    def __init__(self, email_address, employee_name, designation,department, status):
         self.email_address = email_address
         self.employee_name = employee_name
         self.designation = designation
+        self.department = department
         self.status = status
 
 
 STATUS_CHOICE = [('active', 'Active'), ('restricted', 'Restricted'), ('inactive', "Inactive")]
+DEPT_CHOICE = [('ADMIN', 'Admin'), ('E-COMMERCE', 'E-Commerce'), ('MARKETING', "Marketing"), ('IT', 'IT'),
+               ('ATH', 'ATH'), ('ACCOUNTING', "Accounting"), ('SALES', 'Sales'), ('WAREHOUSE', 'Warehouse'),
+               ('PURCHASING', "Purchasing"), ('SUPPORT', 'Support')]
 
 
 class EmailForm(FlaskForm):
     email_address = StringField("Email Address", validators=[DataRequired()])
     employee_name = StringField("Employee", validators=[DataRequired()])
     designation = StringField("Designation", validators=[DataRequired()])
+    department = SelectField("Department", choices=DEPT_CHOICE)
     status = SelectField(u'Status', choices=STATUS_CHOICE)
 
 
@@ -126,9 +135,10 @@ def active_emails():
         email = form.email_address.data
         empl = form.employee_name.data
         designation = form.designation.data
+        department = form.department.data
         status = form.status.data
 
-        new_email = Email(email, empl, designation, status)
+        new_email = Email(email, empl, designation, department, status)
 
         db.session.add(new_email)
         db.session.commit()
@@ -150,5 +160,4 @@ def email_api():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
-
     app.debug(True)
