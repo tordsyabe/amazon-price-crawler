@@ -19,7 +19,24 @@ $(document).ready(function() {
     });
 
 $(document).ready(function () {
-      $('#emailsTable').DataTable();
+    $('#emailsTable').DataTable();
+});
+
+$(document).ready(function () {
+    $('#closeEmailFormModal').on('click', function(){
+        $("#email_address_form").trigger("reset");
+    });
+
+    $('.edit-email-btn').each(function(){
+        $(this).on('click', function(){
+            $('input[id="id"').val($(this).data("id"));
+            $('input[id="email_address"').val($(this).parent().siblings()[0].textContent);
+            $('input[id="employee_name"').val($(this).parent().siblings()[1].textContent);
+            $('input[id="designation"').val($(this).parent().siblings()[2].textContent);
+            $('select[id="department"').val($(this).parent().siblings()[3].textContent).change();;
+            $('select[id="status"').val($(this).parent().siblings()[4].textContent).change();;
+        });
+    });
 });
 
 $(document).ready(function(){
@@ -49,3 +66,4 @@ $(document).ready(function(){
 
 
 });
+

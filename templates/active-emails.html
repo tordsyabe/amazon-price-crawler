@@ -42,9 +42,9 @@
         </div>
         <div class="col-6">
             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                    data-target="#questionFormModal">Add Email Address
+                    data-target="#emailFormModal">Add Email Address
             </button>
-            <button class="btn btn-primary float-right mr-2" id="copyEmailAddresses">Copy emails</button>
+            <button class="btn btn-primary float-right mr-2" id="copyEmailAddresses">Copy Email Addresses</button>
         </div>
     </div>
 
@@ -71,7 +71,13 @@
                 <td>{{email.designation}}</td>
                 <td>{{email.department}}</td>
                 <td>{{email.status}}</td>
-                <td>Edit/ Delete</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-link p-0 edit-email-btn" data-toggle="modal"
+                            data-target="#emailFormModal" data-id="{{email.id}}">Edit
+                    </button>
+                    /
+                    <button type="button" class="btn btn-link p-0">Delete</button>
+                </td>
 
             </tr>
             {% endfor %}
@@ -90,20 +96,21 @@
 
 </div>
 
-<div class="modal fade" id="questionFormModal" tabindex="-1" role="dialog" aria-labelledby="questionFormModal"
+<div class="modal fade" id="emailFormModal" tabindex="-1" role="dialog" aria-labelledby="emailFormModal"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form method="POST" class="my-2" id="email_address_form">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">New email address</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title">Add/ Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" id="closeEmailFormModal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     {{ form.csrf_token }}
+                    {{ form.id }}
                     <div class="row">
                         <div class="col-12">
                             {{ form.email_address.label }}
@@ -138,7 +145,6 @@
 
                 </div>
                 <div class="modal-footer">
-                    <!--                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>-->
                     <button type="submit" class="btn btn-primary btn-sm" id="addEmailSubmitBtn">Add</button>
                 </div>
 

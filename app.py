@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
+from wtforms import StringField, SelectField, HiddenField
 from wtforms.validators import DataRequired
 from dataclasses import dataclass
 from functools import wraps
@@ -44,13 +44,13 @@ class Email(db.Model):
     __tablename__ = "email"
 
     id: int = db.Column(db.Integer, primary_key=True)
-    email_address: str = db.Column(db.String(255), nullable=False)
+    email_address: str = db.Column(db.String(255), nullable=False, unique=True)
     employee_name: str = db.Column(db.String(64), nullable=False)
     designation: str = db.Column(db.String(64), nullable=False)
     department: str = db.Column(db.String(64))
     status: str = db.Column(db.String(64))
 
-    def __init__(self, email_address, employee_name, designation,department, status):
+    def __init__(self, email_address, employee_name, designation, department, status):
         self.email_address = email_address
         self.employee_name = employee_name
         self.designation = designation
@@ -65,6 +65,7 @@ DEPT_CHOICE = [('ADMIN', 'Admin'), ('E-COMMERCE', 'E-Commerce'), ('MARKETING', "
 
 
 class EmailForm(FlaskForm):
+    id = HiddenField("id")
     email_address = StringField("Email Address", validators=[DataRequired()])
     employee_name = StringField("Employee", validators=[DataRequired()])
     designation = StringField("Designation", validators=[DataRequired()])
@@ -132,16 +133,27 @@ def active_emails():
     emails = Email.query.all()
 
     if request.method == "POST" and form.validate_on_submit():
-        email = form.email_address.data
-        empl = form.employee_name.data
-        designation = form.designation.data
-        department = form.department.data
-        status = form.status.data
+        if form.id.data:
+            email_to_update = Email.query.get(int(form.id.data))
+            print(email_to_update)
+            email_to_update.email_address = form.email_address.data
+            email_to_update.employee_name = form.employee_name.data
+            email_to_update.designation = form.designation.data
+            email_to_update.department = form.department.data
+            email_to_update.status = form.status.data
+            db.session.commit()
 
-        new_email = Email(email, empl, designation, department, status)
+        else:
+            email = form.email_address.data
+            empl = form.employee_name.data
+            designation = form.designation.data
+            department = form.department.data
+            status = form.status.data
 
-        db.session.add(new_email)
-        db.session.commit()
+            new_email = Email(email, empl, designation, department, status)
+
+            db.session.add(new_email)
+            db.session.commit()
 
         return redirect(url_for("active_emails"))
 
