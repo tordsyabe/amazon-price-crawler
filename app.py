@@ -17,7 +17,7 @@ def basic_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        if auth and auth.username == "alrais" and auth.password == "alraisgroup@2021":
+        if auth and auth.username == os.environ.get("BASIC_AUTH_USERNAME") and auth.password == os.environ.get("BASIC_AUTH_PASSWORD"):
             return f(*args, **kwargs)
 
         return make_response("Could not verify login, go back <a href='/'>Home</a>", 401, {"WWW-Authenticate": "Basic realm='Login Required'"})
@@ -28,7 +28,7 @@ def basic_auth(f):
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "osdasdfhjklljqw"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
