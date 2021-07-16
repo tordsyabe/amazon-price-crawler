@@ -59,7 +59,7 @@ class Email(db.Model):
 
 
 STATUS_CHOICE = [('active', 'Active'), ('restricted', 'Restricted'), ('inactive', "Inactive")]
-DEPT_CHOICE = [('ADMIN', 'Admin'), ('E-COMMERCE', 'E-Commerce'), ('MARKETING', "Marketing"), ('IT', 'IT'),
+DEPT_CHOICE = [('ADMIN', 'Admin'), ('E-COMMERCE', 'E-Commerce'),('HR', 'HR'), ('MARKETING', "Marketing"), ('IT', 'IT'),
                ('ATH', 'ATH'), ('ACCOUNTING', "Accounting"), ('SALES', 'Sales'), ('WAREHOUSE', 'Warehouse'),
                ('PURCHASING', "Purchasing"), ('SUPPORT', 'Support')]
 
