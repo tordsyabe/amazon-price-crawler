@@ -35,6 +35,12 @@
     </div>
 </nav>
 <div class="container ">
+        <div class="alert alert-info" role="alert" id="copyAlert" style="display: none;">
+        Email addresses copied to clipboard.
+        <button type="button" class="close" aria-label="Close" id="closeCopyAlert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="row mt-5 align-items-center">
         <div class="col-6">
             <h1>Active Emails</h1>
@@ -87,12 +93,7 @@
 
     </div>
     <textarea class="emailAdds" readonly style="position: absolute; left: -9999px; opacity: 0;"></textarea>
-    <div class="alert alert-info" role="alert" id="copyAlert" style="display: none;">
-        Email addresses copied to clipboard.
-        <button type="button" class="close" aria-label="Close" id="closeCopyAlert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+
 
 
 </div>
