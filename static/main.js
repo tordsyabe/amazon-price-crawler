@@ -5,9 +5,9 @@ $(document).ready(function() {
         $("#url_form").submit()
     });
 
-});
 
-$(document).ready(function() {
+
+
     $('#batchConvertSubmitBtn').click(function() {
         $(this).prop("disabled", true);
         $(this).prop("value", "Converting ...");
@@ -16,18 +16,12 @@ $(document).ready(function() {
 
 
 
-    });
 
-$(document).ready(function () {
-    $('#emailsTable').DataTable();
-});
 
-$(document).ready(function () {
-    $('#closeEmailFormModal').on('click', function(){
-        $("#email_address_form").trigger("reset");
-    });
 
-    $('.edit-email-btn').each(function(){
+    $('#emailsTable').DataTable( {
+        "drawCallback": function( settings ) {
+                $('.edit-email-btn').each(function(){
         $(this).on('click', function(){
             $('input[id="id"').val($(this).data("id"));
             $('input[id="email_address"').val($(this).parent().siblings()[0].textContent);
@@ -39,25 +33,35 @@ $(document).ready(function () {
     });
 
     $('.delete-email-btn').each(function(){
-    $(this).on('click', function(){
-        $('#delete_email_address_form input[id="id"').val($(this).data("id"));
+        $(this).on('click', function(){
+            $('#delete_email_address_form input[id="id"]').val($(this).data("id"));
+            console.log($(this).data("id"));
+        });
     });
-    });
-});
-
-$(document).ready(function(){
-
-    var textAreaForEmails = $('.emailAdds');
-    var emailAddresses = ""
-
-    $('#emailsTable td:first-child').each(function(){
-        emailAddresses += $(this).text() + ";";
+        }
     });
 
-    textAreaForEmails.val(emailAddresses);
+
+    $('#closeEmailFormModal').on('click', function(){
+        $("#email_address_form").trigger("reset");
+    });
+
+
+
+
+
 
     $('#copyEmailAddresses').on('click', function(){
         $("#copyAlert").show();
+
+        var textAreaForEmails = $('.emailAdds');
+        var emailAddresses = ""
+
+        $('#emailsTable td:first-child').each(function(){
+            emailAddresses += $(this).text() + ";";
+        });
+
+        textAreaForEmails.val(emailAddresses);
 
         textAreaForEmails.select();
         document.execCommand('copy');
