@@ -72,6 +72,9 @@ class EmailForm(FlaskForm):
     department = SelectField("Department", choices=DEPT_CHOICE)
     status = SelectField(u'Status', choices=STATUS_CHOICE)
 
+class BMIForm(FlaskForm):
+    weight = StringField("Weight (KG)", validators=[DataRequired()])
+    height = StringField("Height (cm)", validators=[DataRequired()])
 
 @app.route("/", methods=['GET'])
 def index():
@@ -179,6 +182,21 @@ def email_api():
 
     return jsonify(emails)
 
+@app.route("/sgh-bmi", methods=["GET", "POST"])
+def sgh_bmi():
+
+    form = BMIForm()
+
+    # if request.method == "POST" and form.validate_on_submit():
+    #     w = form.weight.data
+    #     h = form.height.data
+    #
+    #     h_to_m2 = h * h
+    #     bmi = h_to_m2 / w
+    #
+    #     return redirect(url_for("sgh_bmi"))
+
+    return render_template("sgh-bmi.html", form=form)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

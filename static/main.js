@@ -74,6 +74,58 @@ $(document).ready(function() {
     });
 
 
+    $('#calculateIBMForm').on('submit', function(e) {
 
+        $('#BMIResult').children().remove();
+
+        e.preventDefault();
+        const formArray = $(this).serializeArray();
+        const w = parseInt(formArray[0].value);
+        const h = parseInt(formArray[1].value);
+
+
+        const hToMeters = h / 100;
+        const hToMeters2 = hToMeters * hToMeters
+
+
+        const bmi =  w / hToMeters2;
+        const idealWeight = hToMeters2 * 25;
+        const excessWeight = w - idealWeight;
+        const estimatedWeightLoss = excessWeight * 0.70
+
+        console.log(bmi);
+
+        $('#BMIResult').append(`
+        <div class="col-7">
+            <span class="mt-5 font-weight-bold">BMI Result:</span>
+        </div>
+        <div class="col-5">
+            <span>${bmi.toFixed(2)}</span>
+        </div>
+        <div class="col-7">
+            <span class="mt-5 font-weight-bold">Ideal Weight:</span>
+        </div>
+        <div class="col-5">
+            ${idealWeight.toFixed(2)} kg
+        </div>
+        <div class="col-7">
+            <span class="mt-5 font-weight-bold">Excess Weight: </span>
+        </div>
+        <div class="col-5">
+            ${excessWeight.toFixed(2)} kg
+        </div>
+        <div class="col-7">
+             <span class="mt-5 font-weight-bold">Estimated Weight Loss: </span>
+        </div>
+        <div class="col-5">
+            ${estimatedWeightLoss.toFixed(2)} kg
+        </div>
+        `);
+
+        $('#BMIResult .col-5').css({
+            "font-weight": "bold",
+            "font-size": "16px"
+        });
+    });
 });
 
