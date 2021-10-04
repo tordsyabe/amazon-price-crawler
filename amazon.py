@@ -124,7 +124,7 @@ def amazon_crawler(url):
 
         pinned_price_fraction = element.find_element_by_xpath(
             './/div[contains(@id, "aod-price")]/span/span[2]/span[3]').text
-        pinned_delivery = element.find_element_by_xpath('.//*[@id="ddmDeliveryMessage"]').text
+        pinned_delivery = element.find_element_by_xpath('.//*[@class="a-row aod-delivery-promise"]').text
         price_list.append(f"{pinned_price_whole}.{pinned_price_fraction}")
         delivery_details.append(pinned_delivery)
 
@@ -182,7 +182,7 @@ def amazon_crawler(url):
 
             price_fraction = aod_offer.find_element_by_xpath('.//span[@class="a-price-fraction"]').text
             try:
-                delivery = aod_offer.find_element_by_xpath('.//div[@id="ddmDeliveryMessage"]').text
+                delivery = aod_offer.find_element_by_xpath('.//*[@class="a-row aod-delivery-promise"]').text
 
             except:
                 delivery = aod_offer.find_element_by_xpath('.//div[@class="a-row aod-ship-charge"]').text
